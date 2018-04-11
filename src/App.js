@@ -6,6 +6,10 @@ import Index from './scenes/HomePage/index.js'
 import {colors} from './colors.js'
 import Paper from 'material-ui/Paper';
 import {List, ListItem} from 'material-ui/List';
+import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import Stroop from './scenes/Stroop.js'
+
 
 
 
@@ -17,11 +21,11 @@ class App extends Component {
     }
     onButtonClick(color,choice){
         console.log(color,choice)
-        alert(color == choice)
+        alert(color === choice)
     }
     render() {
         return (
-            <MuiThemeProvider>
+            <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
                 <div className="App">
                     <header className="App-header">
                         <img src={logo} className="App-logo" alt="logo" />
@@ -31,22 +35,41 @@ class App extends Component {
                         To get started, edit <code>src/App.js</code> and save to reload.
                     </p>
                     <Paper className="container">
-                    <List>
-                    {
-                        colors.map( (color,i) => (
-                            <ListItem>
-                            <div key={i}>
-                            <Index 
-                                color={color} 
-                                i={i}
-                                onClick={this.onButtonClick}
-                            />
-                        </div>
-                    </ListItem>
-                        ))
-                    }
-                </List>
-                </Paper>
+                        <List>
+                            {
+                                colors.map( (color,i) => (
+                                    <ListItem>
+                                        <div key={i}>
+                                            <Index 
+                                                color={color} 
+                                                i={i}
+                                                onClick={this.onButtonClick}
+                                            />
+                                        </div>
+                                    </ListItem>
+                                ))
+                            }
+                        </List>
+                    </Paper>
+                    <span> Other Test </span>
+                <Paper className="container">
+                        <List>
+                            {
+                                colors.map( (color,i) => (
+                                    <ListItem>
+                                        <div key={i}>
+                                            <Stroop 
+                                                color={color} 
+                                                i={i}
+                                                onClick={this.onButtonClick}
+                                            />
+                                        </div>
+                                    </ListItem>
+                                ))
+                            }
+                        </List>
+                    </Paper>
+
                 </div>
             </MuiThemeProvider>
         );

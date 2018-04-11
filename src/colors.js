@@ -1,12 +1,15 @@
 export const colors = ['Red','Blue','Green','Yellow']
 
-export function shuffle(a) {
-    var j, x, i;
-    for (i = a.length - 1; i > 0; i--) {
-        j = Math.floor(Math.random() * (i + 1));
-        x = a[i];
-        a[i] = a[j];
-        a[j] = x;
+/**
+ * Randomize array element order in-place.
+ * Using Durstenfeld shuffle algorithm.
+ */
+export function shuffle(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
     }
-    return a;
+    return array
 }
