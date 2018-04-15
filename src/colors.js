@@ -1,4 +1,4 @@
-export const colors = ['Red','Blue','Green','Yellow']
+export const colors = ['Red','Blue','Green',"Orange","Pink","Purple"]
 
 /**
  * Randomize array element order in-place.

@@ -2,78 +2,41 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import Index from './scenes/HomePage/index.js'
-import {colors} from './colors.js'
-import Paper from 'material-ui/Paper';
-import {List, ListItem} from 'material-ui/List';
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import Stroop from './scenes/Stroop.js'
+import {connect} from 'react-redux';
+import Notifications, { success, error} from 'react-notification-system-redux';
+import Questions from './scenes/Question.js'
 
-
+const styles = theme => ({
+    container: {
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
+    textField: {
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit,
+        backgroundColor: "black",
+        wnameth: 200,
+    },
+    menu: {
+        wnameth: 200,
+    },
+});
 
 
 class App extends Component {
-
-    constructor(props){
-        super(props);
-        this.onButtonClick = this.onButtonClick.bind(this)
-    }
-    onButtonClick(color,choice){
-        console.log(color,choice)
-        alert(color === choice)
-    }
-    render() {
+   render() {
+        const { notifications} = this.props;
         return (
             <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
-                <div className="App">
-                    <header className="App-header">
-                        <img src={logo} className="App-logo" alt="logo" />
-                        <h1 className="App-title">Welcome to React</h1>
-                    </header>
-                    <p className="App-intro">
-                        To get started, edit <code>src/App.js</code> and save to reload.
-                    </p>
-                    <Paper className="container">
-                        <List>
-                            {
-                                colors.map( (color,i) => (
-                                    <ListItem>
-                                        <div key={i}>
-                                            <Index 
-                                                color={color} 
-                                                i={i}
-                                                onClick={this.onButtonClick}
-                                            />
-                                        </div>
-                                    </ListItem>
-                                ))
-                            }
-                        </List>
-                    </Paper>
-                    <span> Other Test </span>
-                <Paper className="container">
-                        <List>
-                            {
-                                colors.map( (color,i) => (
-                                    <ListItem>
-                                        <div key={i}>
-                                            <Stroop 
-                                                color={color} 
-                                                i={i}
-                                                onClick={this.onButtonClick}
-                                            />
-                                        </div>
-                                    </ListItem>
-                                ))
-                            }
-                        </List>
-                    </Paper>
-
-                </div>
+                <Questions />
+                <Notifications notifications={notifications} />
             </MuiThemeProvider>
         );
     }
 }
 
-export default App;
+export default connect(
+    state => ({ notifications: state.notifications }),
+)(App);
