@@ -23,8 +23,8 @@ export default class DataAnalysis extends Component {
     render() {
         const { stroopCorrectData, noStroopCorrectData } = this.state;
         const data = [
-            {title: "Regular Correct Data", value: stroopCorrectData, color: "#22594e"},
-            {title: "Stroop Correct Data", value: noStroopCorrectData, color: "#2f7d6d"},
+            {title: "With The Stroop Effect Correct Data", value: stroopCorrectData, color: "#22594e"},
+            {title: "Without The Stroop Effect Correct Data", value: noStroopCorrectData, color: "#2f7d6d"},
         ]
 
         return (
