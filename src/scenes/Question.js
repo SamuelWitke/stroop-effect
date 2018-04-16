@@ -69,7 +69,7 @@ class Questions extends Component {
             });
 
         }
-        //this.firebaseRef = firebase.database().ref(`data/${this.state.name}/${this.state.stroop}`).push(data)
+        this.firebaseRef = firebase.database().ref(`data/${this.state.name}/${this.state.stroop}`).push(data)
         dispatch(toggleQuestion(i))
     }
 
