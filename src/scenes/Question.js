@@ -112,7 +112,7 @@ class Questions extends Component {
             <div className="App">
                 <header className="App-header">
                     <h1 className="App-title">Stroop Effect</h1>
-                    <p className="App-intro">To get started, edit <code>src/App.js</code> and save to reload.</p>  
+                    <p className="App-intro">Answer All The Questions In The Fastest Time</p>  
                 </header>
                     <br/>
                 {!submit &&
@@ -124,7 +124,7 @@ class Questions extends Component {
                 { submit &&
                 <div>
                     <Countdown
-                        date={Date.now() + 11000}
+                        date={Date.now() + 16000}
                         renderer={this.renderer}
                         intervalDelay={0}
                         precision={3}

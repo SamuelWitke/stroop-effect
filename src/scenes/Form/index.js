@@ -3,14 +3,6 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField'
-/*
-const MyForm=({handleSubmit,change})=>( 
-<form onSubmit={handleSubmit}>
-    <RaisedButton label="Submit" type="submit" />
-</form>
-     )
-export default MyForm;
-*/
 
 export default class Form extends React.Component {
     state = {
@@ -59,13 +51,13 @@ export default class Form extends React.Component {
                     label="Start" 
                     onClick={this.handleOpen} />
                 <Dialog
-                    title="Dialog With Actions"
+                    title="Enter Your Name For The Test"
                     actions={actions}
                     modal={false}
                     open={this.state.open}
                     onRequestClose={this.handleClose}
                 >
-                    The actions in this window were passed in as an array of React objects.
+                    The Stroop effect is a phenomenon that occurs when you must say the color of a word but not the name of the word. For example, blue might be printed in red and you must say the color rather than the word.
                 </Dialog>
             </div>
         );
