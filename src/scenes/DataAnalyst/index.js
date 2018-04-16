@@ -28,6 +28,8 @@ export default class DataAnalysis extends Component {
         ]
 
         return (
+            <div>
+                <h1>The Results Of The Test</h1>
             <PieChart
                 data={data}
                 expandOnHover
@@ -39,6 +41,7 @@ export default class DataAnalysis extends Component {
                     }
                 }}
             />
+        </div>
         );
     }
 }
