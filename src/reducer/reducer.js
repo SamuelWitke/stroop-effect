@@ -1,4 +1,4 @@
-const questions = (state = [], action) => {
+export const questions = (state = [], action) => {
   switch (action.type) {
     case 'ADD_QUESTION':
       return [
@@ -21,4 +21,15 @@ const questions = (state = [], action) => {
   }
 }
 
-export default questions; 
+export const counter = (state = 0, action) => {
+  switch (action.type) {
+    case 'INCREMENT':
+      return state + 1;
+    case 'DECREMENT':
+      return state - 1;
+    case 'CLEAR':
+      return 0;
+    default:
+      return state;
+  }
+}

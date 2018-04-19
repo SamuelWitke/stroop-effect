@@ -14,12 +14,17 @@ import DataAnalysis from './DataAnalyst/index.js';
 class Questions extends Component {
     constructor(props){
         super(props);
-        this.state = {name: null, timer: false,submit: false, stroop: "no-stroop"};
+        this.state = {
+            name: null, 
+            timer: false,
+            submit: false, 
+            done: false,
+            intervalId: undefined,
+            stroop: "no-stroop"};
         this.onButtonClick = this.onButtonClick.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.stroopChange = this.stroopChange.bind(this);
-        this.renderer = this.renderer.bind(this);
+        this.callIncrement = this.callIncrement.bind(this);
     }
     componentWillMount(){
         const {dispatch} = this.props;
@@ -28,8 +33,18 @@ class Questions extends Component {
         })
     } 
 
-    onButtonClick(color,choice,i){
+    componentDidUpdate(oldProps,oldState){
         const {dispatch} = this.props;
+        if(oldState.submit !== this.state.submit){
+        }
+    }
+
+    componentWillUnmount(){
+        clearInterval(this.state.intervalId);
+    }
+
+    onButtonClick(color,choice,i){
+        const {dispatch, counter} = this.props;
         const correct = color === choice;
         const data ={
             color: color,
@@ -44,6 +59,7 @@ class Questions extends Component {
                 position: 'tr',
                 autoDismiss: 1,
             }))
+            /*
             var databaseRef = firebase.database().ref(`total/${this.state.stroop}/correct/count`);
             databaseRef.transaction( (data)=> {
                 console.log(data) 
@@ -52,6 +68,7 @@ class Questions extends Component {
                 }
                 return (data || 0) + 1;
             });
+            */
         }else{
             dispatch(error({
                 title: 'Wrong !',
@@ -59,7 +76,8 @@ class Questions extends Component {
                 position: 'tr',
                 autoDismiss: 1,
             }))
-            var databaseRef = firebase.database().ref(`total/${this.state.stroop}/incorrect/count`);
+            /*
+           var databaseRef = firebase.database().ref(`total/${this.state.stroop}/incorrect/count`);
             databaseRef.transaction( (data)=> {
                 console.log(data) 
                 if (data) {
@@ -67,92 +85,117 @@ class Questions extends Component {
                 }
                 return (data || 0) + 1;
             });
+            */
 
         }
-        this.firebaseRef = firebase.database().ref(`data/${this.state.name}/${this.state.stroop}`).push(data)
+        //this.firebaseRef = firebase.database().ref(`data/${this.state.name}/${this.state.stroop}`).push(data)
         dispatch(toggleQuestion(i))
+        if(i == colors.length -1 && this.state.stroop === "stroop"){
+            this.firebaseRef = firebase.database().ref(`time/${this.state.stroop}`)
+            .push({
+                counter: counter,
+                name: this.state.name,
+            })
+            this.setState({ done: true })
+            clearInterval(this.state.intervalId);
+        }else if(i == colors.length -1 && this.state.stroop === "no-stroop"){
+            this.firebaseRef = firebase.database().ref(`time/${this.state.stroop}`).push({
+                counter: counter,
+                name: this.state.name,
+            })
+            colors.forEach( (color,i) =>{
+                dispatch(toggleQuestion(i))
+            })
+            this.props.dispatch({type: 'CLEAR'})
+            clearInterval(this.state.intervalId);
+            const intervalId = setInterval(this.callIncrement, 1000);
+            this.setState({intervalId: intervalId, stroop: "stroop"});
+        }
+    }
+
+    callIncrement() {
+        this.props.dispatch({type: 'INCREMENT'})
     }
 
     handleChange(event) {
         this.setState({name: event.target.value});
     }
 
-    stroopChange(event){
-        event.preventDefault();
-        const {dispatch} = this.props;
-        colors.forEach( (color,i) =>{
-            dispatch(toggleQuestion(i))
-        })
-        this.setState({stroop: "stroop"})  
-    }
-
 
     handleSubmit(event) {
         event.preventDefault();
-        this.setState({submit: true});
+        const intervalId = setInterval(this.callIncrement,1000);
+        this.setState({submit: true, intervalId: intervalId});
     }
 
     handleTimer(){
         this.setState({timer: true})
     }
 
-    renderer({ hours, minutes, seconds, completed }){
-        if (completed) {
-            this.handleTimer();
-            return <DataAnalysis />;
-        } else {
-            if(this.state.timer ) return <DataAnalysis />;
-            return <h2>{hours}:{minutes}:{seconds}</h2>;
-        }
-    };
-
     render(){
-        const { submit, timer, stroop } = this.state;
-        return (
+        const { done, submit, timer, stroop } = this.state;
+        const { counter } = this.props;
+        let render = (
             <div className="App">
                 <header className="App-header">
-                    <h1 className="App-title">Stroop Effect</h1>
-                    <p className="App-intro">Answer All The Questions In The Fastest Time</p>  
+                    <h1 className="App-title">Stroop Effect </h1>
+                    <p className="App-intro">
+                        Answer All The Questions In The Fastest Time
+                    </p>  
                 </header>
+                <DataAnalysis />
+            </div>
+        );
+        if( !done ){
+            render = (
+                <div className="App">
+                    <header className="App-header">
+                        <h1 className="App-title">Stroop Effect </h1>
+                        <p className="App-intro">
+                            Answer All The Questions In The Fastest Time
+                        </p>  
+                        { counter > 0 &&
+                        <h1> Seconds Elapsed: {counter} </h1>
+                        }
+                    </header>
                     <br/>
-                {!submit &&
-                <Form 
-                    change={this.handleChange}
-                    submit={this.handleSubmit}
-                />
-                }
-                { submit &&
-                <div>
-                    <Countdown
-                        date={Date.now() + 16000}
-                        renderer={this.renderer}
-                        intervalDelay={0}
-                        precision={3}
+                    {!submit &&
+                    <Form 
+                        change={this.handleChange}
+                        submit={this.handleSubmit}
                     />
-
-                {!timer &&
-                <div>
-                    {stroop === "no-stroop" ?
+                    }
+                    { submit &&
                     <div>
-                        <br/>
-                        <QuestionList 
-                            stroop={false}
-                            onClick={this.onButtonClick}
-                            colors ={colors}/>
-                        <br/>
-                        <FlatButton backgroundColor="rgb(0, 188, 212)" style={{color: "#fffff"}} onClick={this.stroopChange}  primary={true} label="Next" fullWidth={true} />
-                    </div>
+                        {!timer &&
+                        <div>
+                            {stroop === "no-stroop" ?
+                            <div>
+                                <br/>
+                                <QuestionList 
+                                    stroop={false}
+                                    onClick={this.onButtonClick}
+                                    colors ={colors}/>
+                                <br/>
+                            </div>
                             :
                             <QuestionList 
                                 stroop={true}
                                 onClick={this.onButtonClick}
                             />
+                            }
+                        </div>
+                        }
+                    </div>
                     }
                 </div>
-                }
-            </div>
-                }
-            </div>
-        )}
+            )
+        }
+        return  render;
+    }
 }
-export default connect(null, null)(Questions);
+const mapStateToProps = (state) => { 
+    return { counter: state.counter};
+};
+
+export default connect(mapStateToProps, undefined)(Questions);
