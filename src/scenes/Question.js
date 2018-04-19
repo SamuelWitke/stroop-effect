@@ -59,7 +59,6 @@ class Questions extends Component {
                 position: 'tr',
                 autoDismiss: 1,
             }))
-            /*
             var databaseRef = firebase.database().ref(`total/${this.state.stroop}/correct/count`);
             databaseRef.transaction( (data)=> {
                 console.log(data) 
@@ -68,7 +67,6 @@ class Questions extends Component {
                 }
                 return (data || 0) + 1;
             });
-            */
         }else{
             dispatch(error({
                 title: 'Wrong !',
@@ -76,7 +74,6 @@ class Questions extends Component {
                 position: 'tr',
                 autoDismiss: 1,
             }))
-            /*
            var databaseRef = firebase.database().ref(`total/${this.state.stroop}/incorrect/count`);
             databaseRef.transaction( (data)=> {
                 console.log(data) 
@@ -85,8 +82,6 @@ class Questions extends Component {
                 }
                 return (data || 0) + 1;
             });
-            */
-
         }
         //this.firebaseRef = firebase.database().ref(`data/${this.state.name}/${this.state.stroop}`).push(data)
         dispatch(toggleQuestion(i))
@@ -110,6 +105,7 @@ class Questions extends Component {
             clearInterval(this.state.intervalId);
             const intervalId = setInterval(this.callIncrement, 1000);
             this.setState({intervalId: intervalId, stroop: "stroop"});
+            window.scrollTo(0, 0)
         }
     }
 
